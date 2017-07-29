@@ -9,7 +9,7 @@ var globals = require('./buildGlobals');
 
 globals.getDefines("'production'");
 
-// Основные настройки
+// Main config
 var config = {
     entry: './src/index.js',
     output: {
@@ -47,7 +47,7 @@ var config = {
         ];
     },
     plugins: [
-        //Минификация
+        //Minification (uglify)
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
@@ -57,11 +57,11 @@ var config = {
                 comments: false
             }
         }),
-        //Константы для прекомпиляции
+        //Constants for pre-compilation
         new webpack.DefinePlugin(globals.definePlugin),
-        //Исключение дублей
+        //Exclude dupes
         new webpack.optimize.DedupePlugin(),
-        //CSS в файл
+        //Write CSS to file
         new ExtractTextPlugin('styles.css')
     ]
 };

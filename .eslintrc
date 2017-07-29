@@ -12,7 +12,7 @@
   },
   "globals": {
     "goog": true,
-    "ENV_DEBUG": false //нельзя перезаписывать значение ENV_DEBUG
+    "ENV_DEBUG": false //disallow ENV_DEBUG rewrite
   },
   "plugins": [
     "react",

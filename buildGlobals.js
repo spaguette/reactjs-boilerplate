@@ -8,10 +8,10 @@ module.exports = {
         SMALL_PADDING: 20
     },
     GLOBALS: {
-        namespace: JSON.stringify('infinet')
+        namespace: JSON.stringify('boilerplate')
     },
     
-    /* Общие глобальные переменные для JS и SCSS */
+    /* Common global variables for JS and SCSS */
     getDefines: function (env) {
         if (!env) {
             env = "'development'";
@@ -28,7 +28,7 @@ module.exports = {
             }
         };
 
-        // Формируется строка для глобальных переменных в SCSS
+        // The string of global variables is formed in SCSS
         this.sassGlobals = encodeURIComponent(jsonToSassVars(this.definePlugin.GLOBALS_JS_CSS));
 
         for (var key in this.definePlugin.GLOBALS_JS_CSS) {
