@@ -9,7 +9,7 @@ var globals = require('./buildGlobals');
 globals.getDefines();
 
 var serverHost = '0.0.0.0';
-var serverPort = '80';
+var serverPort = '8081';
 
 // Main config
 var config = {
