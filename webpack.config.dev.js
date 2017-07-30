@@ -43,7 +43,7 @@ var config = {
                     presets: ['react', 'es2015', 'stage-0']
                 }
             },
-            /* React Loader with Babel and hot load */
+            /* CSS and SASS hot load */
             {
                 test: /\.(css|scss)$/,
                 loader: 'style-loader!css-loader?-minimize&camelCase&localIdentName=[name]__[local]___[hash:base64:5]&importLoaders=3!postcss-loader!sass-loader' +
@@ -53,9 +53,7 @@ var config = {
         ]
     },
     postcss: function () {
-        return [
-            autoprefixer
-        ];
+        return [autoprefixer];
     },
     plugins: [
         //Constants for pre-compilation

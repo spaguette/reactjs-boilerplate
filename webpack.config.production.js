@@ -22,7 +22,7 @@ var config = {
     },
     module: {
         loaders: [
-            /* React Loader with Babel and hot load */
+            /* Build JS and JSX (React) */
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
@@ -32,7 +32,7 @@ var config = {
                     presets: ['react', 'es2015', 'stage-0']
                 }
             },
-            /* React Loader with Babel and hot load */
+            /* Build CSS and SASS */
             {
                 test: /\.(css|scss)$/,
                 loader: ExtractTextPlugin.extract('css-loader?minimize&camelCase&localIdentName=[hash:base64:5]&importLoaders=3!postcss-loader!sass-loader' +
