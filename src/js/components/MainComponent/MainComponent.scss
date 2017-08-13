@@ -11,4 +11,11 @@
     background-color: $main-container-background-color;
     overflow: auto;
   }
+  
+  .dropdown-row {
+    display: inline-block;
+    position: absolute;
+    right: 50px;
+    top: 50px;
+  }
 }

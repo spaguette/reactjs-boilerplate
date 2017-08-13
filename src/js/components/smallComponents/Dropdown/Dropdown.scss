@@ -1,0 +1,33 @@
+:local {
+  .caption {
+    line-height: 30px;
+    padding: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+  
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  
+  .container {
+    width: 90px;
+    height: 50px;
+    background-color: white;
+    position: relative;
+    margin-left: 20px;
+    color: #333;
+    box-sizing: border-box;
+    display: inline-block;
+  }
+  
+  .inner-content {
+    position: absolute;
+    top: 55px;
+    left: 0;
+    padding: 10px;
+    background-color: white;
+  }
+}
