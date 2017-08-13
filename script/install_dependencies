@@ -1,10 +1,30 @@
-#!/bin/bash
+#! /bin/bash
+set -e
 
-if [ `yarn -V` != 0.27.5 ]
-then
-echo 'Installing yarn globally, admin access needed';
-sudo npm i yarn@0.27.5 -q -g --no-progress --no-spin;
+ENV=$1
+ENV=${ENV:-development}
+PROJECT_ROOT=$(cd `dirname "${BASH_SOURCE}"`/..; pwd -P)
+
+if ! type -p npm &> /dev/null; then
+  echo 'npm not installed'
+  exit 1
 fi
 
-echo 'Installing project npm dependencies';
-yarn;
+cd $PROJECT_ROOT
+echo 'Installation of npm dependencies'
+
+ensure_yarn() {
+  local version=$1
+  [[ `yarn -V` == $version ]] && return 0
+}
+
+if ! ensure_yarn 0.27.5 ; then
+  echo yarn@0.27.5 is NOT installed, need root/admin privileges
+  echo Installing yarn
+
+  sudo npm install yarn@0.27.5 -g -q --no-spin --no-progress
+fi
+
+NODE_ENV=$ENV yarn
+
+exit 0

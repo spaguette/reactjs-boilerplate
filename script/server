@@ -1,4 +1,10 @@
-#!/bin/bash
+#! /bin/bash
+set -e
 
-script/install_dependencies;
-npm start;
+PROJECT_ROOT=$(cd `dirname "${BASH_SOURCE}"`/..; pwd -P)
+
+cd $PROJECT_ROOT
+bash ./script/install_dependencies $ENV
+npm start
+
+exit 0
