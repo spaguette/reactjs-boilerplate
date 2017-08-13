@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ `yarn -V` != 0.27.5 ]
+then
+echo 'Installing yarn globally, admin access needed';
+sudo npm i yarn@0.27.5 -q -g --no-progress --no-spin;
+fi
+
+echo 'Installing project npm dependencies';
+yarn;

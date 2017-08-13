@@ -1,0 +1,4 @@
+#!/bin/bash
+
+script/install_dependencies;
+npm run build;
