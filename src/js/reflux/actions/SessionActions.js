@@ -1,5 +1,4 @@
 import axios from 'axios';
-import {browserHistory} from 'react-router';
 
 const SessionActions = {
     /**
@@ -7,10 +6,10 @@ const SessionActions = {
      * @param {Object} authInfo
      * @return {void}
      * */
-    logIn: (authInfo) => {
+    logIn: (authInfo, history) => {
         axios.post('/api/session', {username: authInfo.username, password: authInfo.password})
-             .then((response) => {
-                 browserHistory.push('/reservation');
+             .then(() => {
+                 history.push('/reservation');
              })
              .catch((response) => {
                  //notify user about an error
@@ -22,14 +21,14 @@ const SessionActions = {
      * @param {Object} regInfo
      * @return {void}
      * */
-    register: (regInfo) => {
+    register: (regInfo, history) => {
         axios.post('/api/registration', {
             username: regInfo.username,
             password: regInfo.password,
             licensePlate: regInfo.licensePlate
         })
-             .then((response) => {
-                 browserHistory.push('/reservation');
+             .then(() => {
+                 history.push('/reservation');
              })
              .catch((response) => {
                  //notify user about an error

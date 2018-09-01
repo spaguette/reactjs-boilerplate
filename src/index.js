@@ -1,14 +1,12 @@
-if (!('remove' in Element.prototype)) {
-    Element.prototype.remove = function () {
-        if (this.parentNode) {
-            this.parentNode.removeChild(this);
-        }
-    };
-}
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-require('normalize.css');
-require('./styles/index.scss');
+import '@babel/polyfill';
 
-require('es6-promise').polyfill();
-require('./js/app');
+import 'normalize.css';
+import './styles/index.scss';
+
+import App from './js/app';
+
+ReactDOM.render(<App />, document.getElementById('root'));
 

@@ -1,23 +1,19 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+import autobind from 'autobind-decorator';
+
 import * as styles from './RegistrationComponent.scss';
-import {browserHistory} from 'react-router';
 import SessionActions from '../../reflux/actions/SessionActions';
-import {TextInput, PasswordInput} from '../Inputs/ValidationInputs/ValidationInputs.react';
+import {TextInput, PasswordInput} from '../Inputs/ValidationInputs/ValidationInputs';
 
-class RegistrationComponent extends React.PureComponent {
-    static displayName = 'RegistrationComponent';
-
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = {
-            isLoginEmpty: null,
-            isPasswordEmpty: null,
-            isLicenseEmpty: null
-        };
+class RegistrationComponent extends PureComponent {
+    state = {
+        isLoginEmpty: null,
+        isPasswordEmpty: null,
+        isLicenseEmpty: null
     }
 
-    validate = (name, event) => {
+    @autobind
+    validate(name, event) {
         const value = event.target.value;
         switch (name) {
             case 'login':
@@ -29,46 +25,57 @@ class RegistrationComponent extends React.PureComponent {
             default:
                 break;
         }
-    };
+    }
 
-    register = () => {
+    @autobind
+    register() {
         const loginValue = this.refs.loginInput.refs.input.value,
             passwordValue = this.refs.passwordInput.refs.input.value,
             licensePlateValue = this.refs.licensePlateInput.refs.input.value;
-        let isLoginEmpty = false, isPasswordEmpty = false, isLicenseEmpty = false;
+
+        let isLoginEmpty = false,
+            isPasswordEmpty = false,
+            isLicenseEmpty = false;
 
         if (!loginValue || loginValue.trim() === '') {
             isLoginEmpty = true;
         }
+
         if (!passwordValue || passwordValue.trim() === '') {
             isPasswordEmpty = true;
         }
+
         if (!licensePlateValue || licensePlateValue.trim() === '') {
             isLicenseEmpty = true;
         }
+
         if (!isLoginEmpty && !isPasswordEmpty && !isLicenseEmpty) {
             SessionActions.register({
                 username: this.refs.loginInput.refs.input.value,
                 password: this.refs.passwordInput.refs.input.value,
                 licensePlate: this.refs.licensePlateInput.refs.input.value
-            });
+            }, this.props.history);
         } else {
             console.error('Please fill all fields to register');
             this.setState({isLoginEmpty, isPasswordEmpty, isLicenseEmpty});
         }
-    };
+    }
 
-    onKeyDown = (event) => {
-        if (event.keyCode === 13) {
+    @autobind
+    handleLoginClick() {
+        this.props.history.push('/login');
+    }
+
+    @autobind
+    handleKeyDown(event) {
+        if (event.key === 'Enter') {
             this.register();
         }
-    };
+    }
 
     render() {
-        const {router} = this.context;
-        const {isLoginEmpty, isPasswordEmpty, isLicenseEmpty} = this.state;
         return (
-            <div onKeyDown={this.onKeyDown}>
+            <div onKeyDown={this.handleKeyDown}>
                 <TextInput
                     label="Login"
                     labelClassName={styles.caption}
@@ -84,12 +91,15 @@ class RegistrationComponent extends React.PureComponent {
                     labelClassName={styles.caption}
                     ref="licensePlateInput"
                 />
-                <div className={styles.registrationButton} onClick={this.register}>
+                <div
+                    className={styles.registrationButton}
+                    onClick={this.register}
+                >
                     Sign up
                 </div>
-                <div className={styles.loginButtonLink} onClick={() => {
-                    browserHistory.push('/login');
-                }}
+                <div
+                    className={styles.loginButtonLink}
+                    onClick={this.handleLoginClick}
                 >
                     Sign in
                 </div>

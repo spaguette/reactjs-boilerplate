@@ -6,7 +6,7 @@
  * should not toggle the dropdown)
  * */
 
-export default function dropdownCheck(event, callbackFn, avoidedElements) {
+const dropdownCheck = (event, callbackFn, avoidedElements) => {
     if (!avoidedElements || avoidedElements.length <= 0) {
         console.error('Received empty array of elements to avoid toggling the dropdown');
         return false;
@@ -44,4 +44,6 @@ export default function dropdownCheck(event, callbackFn, avoidedElements) {
     }
 
     callbackFn(); //toggle the dropdown
-}
+};
+
+export default dropdownCheck;

@@ -1,10 +1,11 @@
-import ReactDOM from 'react-dom';
 import React from 'react';
-import {Router, Route, IndexRoute, browserHistory, Redirect} from 'react-router';
-import LoginComponent from './components/LoginComponent/LoginComponent.react.js';
-import RegistrationComponent from './components/RegistrationComponent/RegistrationComponent.react.js';
-import MainComponent from './components/MainComponent/MainComponent.react.js';
 import axios from 'axios';
+import { hot } from 'react-hot-loader';
+import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
+
+import LoginComponent from './components/LoginComponent/LoginComponent.jsx';
+import RegistrationComponent from './components/RegistrationComponent/RegistrationComponent.jsx';
+import MainComponent from './components/MainComponent/MainComponent.jsx';
 
 /**
  * RedirectFunction (ReactRouter v1.0)
@@ -14,20 +15,20 @@ import axios from 'axios';
  */
 /** Check the user authorization
  * @function
- * @param {Object} nextState - RouterState - задается ReactRouter-ом
+ * @param {Object} nextState - RouterState - created by ReactRouter
  * @param {RedirectFunction} redirectTo
  * @param {Function} callback
  * @return {void}
  * */
-function requireAuth(nextState, redirectTo, callback) {
+const requireAuth = (nextState, redirectTo, callback) => {
     axios.get('/api/session')
-        .then(function (response) {
+        .then(() => {
             setTimeout(() => {
                 console.info('User authorized, page rendered');
                 callback();
             }, 0);
         })
-        .catch(function (response) {
+        .catch(response => {
             if (response instanceof Error) {
                 // Something happened in setting up the request that triggered an Error
                 console.error('Error', response.message);
@@ -45,16 +46,24 @@ function requireAuth(nextState, redirectTo, callback) {
                 callback();
             }
         });
-}
+};
 
-const routes = (
-    <Router history={browserHistory}>
-        <Redirect from="/" to="/login" />
-        <Route path="/" component={MainComponent}>
-            <Route path="/login" component={LoginComponent} />
-            <Route path="/registration" component={RegistrationComponent} />
-        </Route>
+const loggedIn = false;
+
+const App = () => (
+    <Router>
+        <MainComponent>
+            <Route
+                exact
+                path="/"
+                render={() => loggedIn ? <Redirect to="/login" /> : <Redirect to="/registration" />}
+            />
+            <Switch>
+                <Route path="/login" component={LoginComponent} />
+                <Route path="/registration" component={RegistrationComponent} />
+            </Switch>
+        </MainComponent>
     </Router>
 );
 
-ReactDOM.render(routes, document.getElementById('root'));
+export default hot(module)(App);

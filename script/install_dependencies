@@ -18,11 +18,11 @@ ensure_yarn() {
   [[ `yarn -V` == $version ]] && return 0
 }
 
-if ! ensure_yarn 0.27.5 ; then
-  echo yarn@0.27.5 is NOT installed, need root/admin privileges
+if ! ensure_yarn 1.2.1 ; then
+  echo yarn@1.2.1 is NOT installed, need root/admin privileges
   echo Installing yarn
 
-  sudo npm install yarn@0.27.5 -g -q --no-spin --no-progress
+  sudo npm install yarn@1.2.1 -g -q --no-spin --no-progress
 fi
 
 NODE_ENV=$ENV yarn

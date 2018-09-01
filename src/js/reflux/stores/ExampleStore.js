@@ -4,22 +4,22 @@ var CONTENT_CHANGE = 'CONTENT_CHANGE';
 var ExampleStore = Object.assign({}, EventEmitter.prototype, {
     content: null,
 
-    emitContentChange: function () {
+    emitContentChange() {
         this.emit(CONTENT_CHANGE);
     },
 
-    isLoaded: function () {
+    isLoaded() {
         return !!this.content;
     },
 
     /**
      * @param {function} callback
      */
-    addContentChangeListener: function (callback) {
+    addContentChangeListener(callback) {
         this.on(CONTENT_CHANGE, callback);
     },
 
-    rewriteContent: function (data) {
+    rewriteContent(data) {
         if (data) {
             this.content = data;
             this.emitContentChange();
@@ -29,7 +29,7 @@ var ExampleStore = Object.assign({}, EventEmitter.prototype, {
     /**
      * @param {function} callback
      */
-    removeContentChangeListener: function (callback) {
+    removeContentChangeListener(callback) {
         this.removeListener(CONTENT_CHANGE, callback);
     }
 });
