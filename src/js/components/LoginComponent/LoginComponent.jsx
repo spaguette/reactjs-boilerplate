@@ -1,16 +1,30 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import autobind from 'autobind-decorator';
 
 import * as styles from './LoginComponent.scss';
 import SessionActions from '../../reflux/actions/SessionActions';
 
-class LoginComponent extends Component {
+class LoginComponent extends PureComponent {
+    state = {
+        username: '',
+        password: ''
+    }
+
+    @autobind
+    handleUsernameChange(event) {
+        this.setState({ username: event.target.value });
+    }
+
+    @autobind
+    handlePasswordChange(event) {
+        this.setState({ password: event.target.value });
+    }
+
     @autobind
     handleLoginClick() {
-        SessionActions.logIn({
-            username: this.refs.loginInput.value,
-            password: this.refs.passwordInput.value
-        }, this.props.history);
+        const { username, password } = this.state;
+
+        SessionActions.logIn({ username, password }, this.props.history);
     }
 
     @autobind
@@ -39,9 +53,11 @@ class LoginComponent extends Component {
                         <p>Login</p>
                     </label>
                     <input
-                        ref="loginInput"
                         id="login-username-input-field"
                         type="text"
+                        className={styles.formInput}
+                        onChange={this.handleUsernameChange}
+                        value={this.state.username}
                     />
                 </div>
                 <div>
@@ -52,9 +68,11 @@ class LoginComponent extends Component {
                         <p>Password</p>
                     </label>
                     <input
-                        ref="passwordInput"
                         id="login-password-input-field"
                         type="password"
+                        className={styles.formInput}
+                        onChange={this.handlePasswordChange}
+                        value={this.state.password}
                     />
                 </div>
                 <div

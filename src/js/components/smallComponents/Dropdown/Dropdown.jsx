@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { createRef, PureComponent } from 'react';
 import autobind from 'autobind-decorator';
 
 import styles from './Dropdown.scss';
 import dropdownCheck from '../../../utils/dropdownCheck';
 
-class Dropdown extends React.PureComponent {
-    dropDownButtonRef = React.createRef()
+class Dropdown extends PureComponent {
+    dropDownContentRef = createRef()
 
     state = {
         isOpened: false
@@ -28,7 +28,7 @@ class Dropdown extends React.PureComponent {
 
     @autobind
     handleOutsideAreaClick(event) {
-        dropdownCheck(event, () => {this.handleDropdownClick(event);}, [this.dropDownButtonRef]);
+        dropdownCheck(event, () => {this.handleDropdownClick(event);}, [this.dropDownContentRef]);
     }
 
     render() {
@@ -37,8 +37,8 @@ class Dropdown extends React.PureComponent {
         if (this.state.isOpened) {
             content = (
                 <div
+                    ref={this.dropDownContentRef}
                     className={styles.innerContent}
-                    ref={this.dropDownButtonRef}
                 >
                     This is a test Dropdown component!
                 </div>
@@ -47,7 +47,12 @@ class Dropdown extends React.PureComponent {
 
         return (
             <div className={styles.container}>
-                <div onClick={this.handleDropdownClick} className={styles.caption}>Click me!</div>
+                <div
+                    onClick={this.handleDropdownClick}
+                    className={styles.caption}
+                >
+                    Click me!
+                </div>
                 {content}
             </div>
         );

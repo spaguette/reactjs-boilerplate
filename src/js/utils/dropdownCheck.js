@@ -21,29 +21,19 @@ const dropdownCheck = (event, callbackFn, avoidedElements) => {
             console.error('Received empty array of elements to avoid toggling the dropdown');
             return false;
         }
-        let resultFlag;
+
         for (const avoidedElement of avoidedElements) {
-            if (currentElement !== avoidedElement) {
-                resultFlag = true;
-                continue;
+            if (avoidedElement.current.contains(currentElement)) {
+                return false;
             }
-            resultFlag = false;
-            break;
         }
-        return resultFlag;
+
+        return true;
     }
 
-    let element = event.target;
-
-    while (element && isCurrentElementOutsideDropdown(element)) {
-        element = element.parentNode;
+    if (isCurrentElementOutsideDropdown(event.target)) {
+        callbackFn(); //toggle the dropdown
     }
-
-    if (!isCurrentElementOutsideDropdown(element)) {
-        return false; //do not trigger the toggling, just return false
-    }
-
-    callbackFn(); //toggle the dropdown
 };
 
 export default dropdownCheck;

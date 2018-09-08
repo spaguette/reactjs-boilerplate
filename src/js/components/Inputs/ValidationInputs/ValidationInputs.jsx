@@ -1,69 +1,91 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import autobind from 'autobind-decorator';
 
 import * as styles from './ValidationInputs.scss';
 
-class TextInput extends React.PureComponent {
+class TextInput extends PureComponent {
     state = {
-        valid: true
+        valid: this.props.isValidInitially
     }
 
     static propTypes = {
+        value: PropTypes.string,
+        isValidInitially: PropTypes.bool,
+        type: PropTypes.string,
         labelClassName: PropTypes.string,
-        inputClassName: PropTypes.string
+        inputClassName: PropTypes.string,
+
+        onChange: PropTypes.func.isRequired,
+        onValidityChange: PropTypes.func.isRequired
+    }
+
+    static defaultProps = {
+        type: 'text',
+
+        onChange: () => {},
+        onValidityChange: () => {}
+    }
+
+    componentDidMount() {
+        (!this.props.isValidInitially || this.props.value) && this.validate(this.props.value);
+    }
+
+    componentDidUpdate(_, prevState) {
+        if (prevState.valid !== this.state.valid) {
+            this.props.onValidityChange(this.state.valid);
+        }
     }
 
     validate(value) {
-        this.setState({valid: value && value.trim() !== ''});
+        this.setState({ valid: typeof value === 'string' && value.trim() !== '' });
     }
 
     @autobind
-    onBlur(event) {
+    handleBlur(event) {
         this.validate(event.target.value);
     }
 
-    render() {
-        const { labelClassName, inputClassName, label } = this.props;
-        let resultClassName = null;
+    @autobind
+    handleChange(event) {
+        const { value } = event.target;
 
-        if (inputClassName) {
-            resultClassName = inputClassName;
-        } else if (this.state.valid) {
-            resultClassName = styles.inputContainer;
-        } else {
-            resultClassName = styles.inputContainerInvalid;
-        }
+        this.props.onChange(value);
+        this.validate(value);
+    }
+
+    render() {
+        const { labelClassName, inputClassName, label, type, value } = this.props;
+
+        const inputClasses = classNames(inputClassName, {
+            [styles.inputContainer]: !inputClassName && this.state.valid,
+            [styles.inputContainerInvalid]: !inputClassName && !this.state.valid
+        });
 
         return (
             <div>
-                {Boolean(label) && <label className={labelClassName}><p>{label}</p></label>}
+                {Boolean(label) && (
+                    <label className={labelClassName}>
+                        <p>{label}</p>
+                    </label>
+                )}
                 <input
-                    ref="input"
-                    type="text"
-                    className={resultClassName}
-                    onBlur={this.onBlur}
+                    type={type}
+                    value={value}
+                    className={inputClasses}
+                    onChange={this.handleChange}
+                    onBlur={this.handleBlur}
                 />
             </div>
         );
     }
 }
 
-const PasswordInput = ({ labelClassName, inputClassName, label }) => (
-    <div>
-        {Boolean(label) && <label className={labelClassName}><p>{label}</p></label>}
-        <input
-            ref="input"
-            type="password"
-            className={inputClassName ? inputClassName : styles.inputContainer}
-        />
-    </div>
-);
+const PasswordInput = props => <TextInput {...props} type="password" />;
 
-PasswordInput.propTypes = {
-    labelClassName: PropTypes.string,
-    inputClassName: PropTypes.string
-};
+PasswordInput.propTypes = TextInput.propTypes;
+PasswordInput.defaultProps = TextInput.defaultProps;
 
 export default TextInput;
 

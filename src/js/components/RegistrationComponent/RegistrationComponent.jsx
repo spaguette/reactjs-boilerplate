@@ -6,58 +6,32 @@ import SessionActions from '../../reflux/actions/SessionActions';
 import {TextInput, PasswordInput} from '../Inputs/ValidationInputs/ValidationInputs';
 
 class RegistrationComponent extends PureComponent {
+    isLoginValid = true
+    isPasswordValid = true
+    isLicensePlateValid = true
+
     state = {
-        isLoginEmpty: null,
-        isPasswordEmpty: null,
-        isLicenseEmpty: null
+        username: '',
+        password: '',
+        licensePlate: '',
     }
 
-    @autobind
-    validate(name, event) {
-        const value = event.target.value;
-        switch (name) {
-            case 'login':
-                break;
-            case 'password':
-                break;
-            case 'license':
-                break;
-            default:
-                break;
-        }
+    handleFieldChange = field => value => {
+        this.setState({ [field]: value });
+    }
+
+    handleValidityChange = validityProperty => isValid => {
+        this[validityProperty] = isValid;
     }
 
     @autobind
     register() {
-        const loginValue = this.refs.loginInput.refs.input.value,
-            passwordValue = this.refs.passwordInput.refs.input.value,
-            licensePlateValue = this.refs.licensePlateInput.refs.input.value;
+        const { username, password, licensePlate } = this.state;
 
-        let isLoginEmpty = false,
-            isPasswordEmpty = false,
-            isLicenseEmpty = false;
-
-        if (!loginValue || loginValue.trim() === '') {
-            isLoginEmpty = true;
-        }
-
-        if (!passwordValue || passwordValue.trim() === '') {
-            isPasswordEmpty = true;
-        }
-
-        if (!licensePlateValue || licensePlateValue.trim() === '') {
-            isLicenseEmpty = true;
-        }
-
-        if (!isLoginEmpty && !isPasswordEmpty && !isLicenseEmpty) {
-            SessionActions.register({
-                username: this.refs.loginInput.refs.input.value,
-                password: this.refs.passwordInput.refs.input.value,
-                licensePlate: this.refs.licensePlateInput.refs.input.value
-            }, this.props.history);
+        if (this.isLoginValid && this.isPasswordValid && this.isLicensePlateValid) {
+            SessionActions.register({ username, password, licensePlate }, this.props.history);
         } else {
             console.error('Please fill all fields to register');
-            this.setState({isLoginEmpty, isPasswordEmpty, isLicenseEmpty});
         }
     }
 
@@ -79,17 +53,26 @@ class RegistrationComponent extends PureComponent {
                 <TextInput
                     label="Login"
                     labelClassName={styles.caption}
-                    ref="loginInput"
+                    value={this.state.username}
+                    isValidInitially={this.isLoginValid}
+                    onChange={this.handleFieldChange('username')}
+                    onValidityChange={this.handleValidityChange('isLoginValid')}
                 />
                 <PasswordInput
                     label="Password"
                     labelClassName={styles.caption}
-                    ref="passwordInput"
+                    value={this.state.password}
+                    isValidInitially={this.isPasswordValid}
+                    onChange={this.handleFieldChange('password')}
+                    onValidityChange={this.handleValidityChange('isPasswordValid')}
                 />
                 <TextInput
                     label="Registration number"
                     labelClassName={styles.caption}
-                    ref="licensePlateInput"
+                    value={this.state.licensePlate}
+                    isValidInitially={this.isLicensePlateValid}
+                    onChange={this.handleFieldChange('licensePlate')}
+                    onValidityChange={this.handleValidityChange('isLicensePlateValid')}
                 />
                 <div
                     className={styles.registrationButton}
