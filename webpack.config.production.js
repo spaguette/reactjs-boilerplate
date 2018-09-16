@@ -1,69 +1,51 @@
-require('babel-polyfill');
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-var path = require('path');
-var webpack = require('webpack');
-var autoprefixer = require('autoprefixer');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-
-var globals = require('./buildGlobals');
-
-globals.getDefines("'production'");
-
-// Main config
-var config = {
+module.exports = {
     entry: './src/index.js',
+
     output: {
         path: path.join(__dirname, 'build'),
-        filename: 'bundle.js',
-        publicPath: '/build/'
+        filename: 'bundle.js'
     },
+
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['.js', '.jsx'],
+        modules: ['node_modules']
     },
+
     module: {
-        loaders: [
-            /* Build JS and JSX (React) */
+        rules: [
+            /* React Loader with Babel and hot load */
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                include:  [path.join(__dirname, 'src')],
-                loader: 'babel', // react-hot-loader, babel-loader
-                query: {
-                    presets: ['react', 'es2015', 'stage-0']
-                }
+                include: [path.join(__dirname, 'src')],
+                loader: 'babel-loader'
             },
-            /* Build CSS and SASS */
             {
-                test: /\.(css|scss)$/,
-                loader: ExtractTextPlugin.extract('css-loader?minimize&camelCase&localIdentName=[hash:base64:5]&importLoaders=3!postcss-loader!sass-loader' +
-                    '?includePaths[]=' + (path.resolve(__dirname, './node_modules')) +
-                    '!' + globals.prepend + '?appendData=' + globals.sassGlobals)
+                test:  /\.(css|scss)$/,
+                loaders: [
+                    {
+                        loader: MiniCssExtractPlugin.loader
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: true,
+                            importLoaders: 2,
+                            camelCase: true,
+                            localIdentName: '[name]__[local]___[hash:base64:5]'
+                        }
+                    },
+                    { loader: 'postcss-loader' },
+                    { loader: 'sass-loader' }
+                ]
             }
         ]
     },
-    postcss: function () {
-        return [
-            autoprefixer
-        ];
-    },
+
     plugins: [
-        //Minification (uglify)
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            },
-            sourceMap: false,
-            output: {
-                comments: false
-            }
-        }),
-        //Constants for pre-compilation
-        new webpack.DefinePlugin(globals.definePlugin),
-        //Exclude dupes
-        new webpack.optimize.DedupePlugin(),
-        //Write CSS to file
-        new ExtractTextPlugin('styles.css')
+        new MiniCssExtractPlugin({ filename: 'styles.css' })
     ]
 };
-
-module.exports = config;

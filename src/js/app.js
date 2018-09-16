@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 import { hot } from 'react-hot-loader';
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
 
+import outsideClick from './utils/dropdownCheck';
 import LoginComponent from './components/LoginComponent/LoginComponent.jsx';
 import RegistrationComponent from './components/RegistrationComponent/RegistrationComponent.jsx';
 import MainComponent from './components/MainComponent/MainComponent.jsx';
@@ -50,20 +51,39 @@ const requireAuth = (nextState, redirectTo, callback) => {
 
 const loggedIn = false;
 
-const App = () => (
-    <Router>
-        <MainComponent>
-            <Route
-                exact
-                path="/"
-                render={() => loggedIn ? <Redirect to="/login" /> : <Redirect to="/registration" />}
-            />
-            <Switch>
-                <Route path="/login" component={LoginComponent} />
-                <Route path="/registration" component={RegistrationComponent} />
-            </Switch>
-        </MainComponent>
-    </Router>
-);
+@hot(module)
+class App extends Component {
+    componentDidMount() {
+        outsideClick.initialize();
+    }
 
-export default hot(module)(App);
+    componentWillUnmount() {
+        outsideClick.destroy();
+    }
+
+    render() {
+        return (
+            <Router>
+                <MainComponent>
+                    <Route
+                        exact
+                        path="/"
+                        render={() => loggedIn ? <Redirect to="/login" /> : <Redirect to="/registration" />}
+                    />
+                    <Switch>
+                        <Route
+                            path="/login"
+                            component={LoginComponent}
+                        />
+                        <Route
+                            path="/registration"
+                            component={RegistrationComponent}
+                        />
+                    </Switch>
+                </MainComponent>
+            </Router>
+        );
+    }
+}
+
+export default App;

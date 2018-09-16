@@ -1,39 +1,21 @@
-/**
- * @function dropdownCheck
- * @param {MouseEvent} event - event of mouse click
- * @param {Function} callbackFn - function to call after the elements check (usually a function to toggle the dropdown)
- * @param {!Array<HTMLElement>} avoidedElements - elements that are inside the dropdown (the click on these elements
- * should not toggle the dropdown)
- * */
+const compose = (...fns) => fns.reduceRight((prevFn, nextFn) => (...args) => nextFn(prevFn(...args)), value => value);
 
-const dropdownCheck = (event, callbackFn, avoidedElements) => {
-    if (!avoidedElements || avoidedElements.length <= 0) {
-        console.error('Received empty array of elements to avoid toggling the dropdown');
-        return false;
+class OutsideClickHandler {
+    _handlersMap = new Map()
+
+    _makeChainable = fn => (...args) => compose(() => this, fn.bind(this._handlersMap)(...args))
+
+    _handleOutsideClick = evt => {
+        this._handlersMap.forEach((handler, el) => !el.contains(evt.target) && handler(evt))
     }
 
-    /**
-     * @function isCurrentElementOutsideDropdown
-     * @param {EventTarget} currentElement - element to check
-     * */
-    function isCurrentElementOutsideDropdown(currentElement) {
-        if (!avoidedElements || avoidedElements.length <= 0) {
-            console.error('Received empty array of elements to avoid toggling the dropdown');
-            return false;
-        }
+    initialize = () => document.addEventListener('click', this._handleOutsideClick)
+    destroy = () => document.removeEventListener('click', this._handleOutsideClick)
 
-        for (const avoidedElement of avoidedElements) {
-            if (avoidedElement.current.contains(currentElement)) {
-                return false;
-            }
-        }
+    set = this._makeChainable(this._handlersMap.set)
+    delete = this._makeChainable(this._handlersMap.delete)
+}
 
-        return true;
-    }
+const outsideClickHandlerSingleton = new OutsideClickHandler();
 
-    if (isCurrentElementOutsideDropdown(event.target)) {
-        callbackFn(); //toggle the dropdown
-    }
-};
-
-export default dropdownCheck;
+export default outsideClickHandlerSingleton;

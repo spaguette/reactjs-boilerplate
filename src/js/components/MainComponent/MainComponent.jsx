@@ -9,6 +9,7 @@ const MainComponent = ({ children }) => (
         <div className={styles.dropdownRow}>
             <Dropdown />
             <Dropdown />
+            <Dropdown />
         </div>
     </div>
 );

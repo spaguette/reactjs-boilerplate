@@ -1,62 +1,77 @@
-import React, { createRef, PureComponent } from 'react';
+import React, { Component, forwardRef, createRef } from 'react';
 import autobind from 'autobind-decorator';
 
 import styles from './Dropdown.scss';
-import dropdownCheck from '../../../utils/dropdownCheck';
+import outsideClick from '../../../utils/dropdownCheck';
 
-class Dropdown extends PureComponent {
-    dropDownContentRef = createRef()
+const withForwardedRef = WrappedComponent => forwardRef((props, ref) => (
+    <WrappedComponent
+        {...props}
+        ref={props.instanceRef}
+        forwardedRef={ref}
+    />
+));
 
-    state = {
-        isOpened: false
-    }
+const withOutsideClickHandler = WrappedComponent => {
+    const WithForwardedRef = withForwardedRef(WrappedComponent);
 
-    mountEvents() {
-        document.addEventListener('click', this.handleOutsideAreaClick);
-    }
+    class WithOutsideClickHandler extends Component {
+        instanceRef = createRef()
+        dropDownContentRef = createRef()
 
-    unMountEvents() {
-        document.removeEventListener('click', this.handleOutsideAreaClick);
-    }
+        state = { isOpened: false }
 
-    @autobind
-    handleDropdownClick(event) {
-        event.stopPropagation();
-        this.state.isOpened ? this.unMountEvents() : this.mountEvents();
-        this.setState(prevState => ({ isOpened: !prevState.isOpened }));
-    }
+        componentDidUpdate(prevProps, prevState) {
+            if (prevState.isOpened !== this.state.isOpened) {
+                const element = this.dropDownContentRef.current;
 
-    @autobind
-    handleOutsideAreaClick(event) {
-        dropdownCheck(event, () => {this.handleDropdownClick(event);}, [this.dropDownContentRef]);
-    }
-
-    render() {
-        let content = null;
-
-        if (this.state.isOpened) {
-            content = (
-                <div
-                    ref={this.dropDownContentRef}
-                    className={styles.innerContent}
-                >
-                    This is a test Dropdown component!
-                </div>
-            );
+                this.state.isOpened ? outsideClick.set(element, this.handleClickOutside) : outsideClick.delete(element);
+            }
         }
 
-        return (
-            <div className={styles.container}>
-                <div
-                    onClick={this.handleDropdownClick}
-                    className={styles.caption}
-                >
-                    Click me!
-                </div>
-                {content}
-            </div>
-        );
-    }
-}
+        @autobind
+        toggleDropdown(event, newIsOpened = null) {
+            this.setState(prevState => ({
+                isOpened: newIsOpened === null ? !prevState.isOpened : newIsOpened
+            }));
+        }
 
-export default Dropdown;
+        @autobind
+        handleClickOutside() {
+            this.toggleDropdown(null, false);
+
+            const instance = this.instanceRef.current;
+
+            if (instance && typeof instance.handleClickOutside === 'function') {
+                instance.handleClickOutside(event);
+            }
+        }
+
+        render() {
+            return (
+                <WithForwardedRef
+                    {...this.props}
+                    ref={this.dropDownContentRef}
+                    instanceRef={this.instanceRef}
+                    isOpened={this.state.isOpened}
+                    onOutsideClick={this.handleClickOutside}
+                    toggleDropdown={this.toggleDropdown}
+                />
+            )
+        }
+    }
+
+    return WithOutsideClickHandler;
+};
+
+const DropdownRoot = ({ onClick }) => <div className={styles.caption} onClick={onClick}>Click me!</div>;
+const DropdownContent = () => <div className={styles.innerContent}>This is a test Dropdown component!</div>;
+
+const Dropdown = ({ forwardedRef, isOpened, toggleDropdown }) => (
+    <div className={styles.container} ref={forwardedRef}>
+        <DropdownRoot onClick={toggleDropdown} />
+        {isOpened && <DropdownContent />}
+    </div>
+);
+
+export default withOutsideClickHandler(Dropdown);

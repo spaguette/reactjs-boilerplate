@@ -1,38 +1,32 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+import autobind from 'autobind-decorator';
+
 import * as styles from './HighlightCircle.scss';
 
-class HighlightCircle extends React.PureComponent {
-    static displayName = 'HighlightCircle';
+class HighlightCircle extends PureComponent {
+    state = { color: 'red' }
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            color: 'red'
-        };
+    @autobind
+    handleMouseOver() {
+        this.setState({ color: 'green' });
     }
 
-    _onMouseOver = () => {
-        this.setState({color: 'green'});
-    };
-
-    _onMouseOut = () => {
-        this.setState({color: 'red'});
-    };
+    @autobind
+    handleMouseOut() {
+        this.setState({ color: 'red' });
+    }
 
     render() {
         return (
             <svg
                 className={styles.svgContainer}
                 onClick={this.props.onClick}
-                onMouseOver={this._onMouseOver}
-                onMouseOut={this._onMouseOut}
-                xmlns="http://www.w3.org/2000/svg"
+                onMouseOver={this.handleMouseOver}
+                onMouseOut={this.handleMouseOut}
                 width="230"
                 height="230"
-                id="svg2"
             >
-                <g id="layer" style={{transform: 'translate(4px, 14px)'}}>
+                <g style={{ transform: 'translate(4px, 14px)' }}>
                     <path
                         x="0" y="0"
                         style={{
@@ -57,11 +51,10 @@ class HighlightCircle extends React.PureComponent {
                             display: 'inline',
                             overflow: 'visible'
                         }}
-                        id="path1872"
                         d="M 212 105 A 90 90 0 1 1  15,103.21429 A 90 90 0 1 1  212 105 z"
                     />
                 </g>
-                <g id="layer1" style={{transform: 'translate(15px, 15px)'}}>
+                <g style={{ transform: 'translate(15px, 15px)' }}>
                     <path
                         x="0" y="0"
                         style={{
@@ -86,10 +79,16 @@ class HighlightCircle extends React.PureComponent {
                             display: 'inline',
                             overflow: 'visible'
                         }}
-                        id="path1872"
                         d="M 190 103.21429 A 87.5 87.5 0 1 1  15,103.21429 A 87.5 87.5 0 1 1  190 103.21429 z"
                     />
-                    <text x="43" y="110" fill="white" fontSize="30">{this.props.children}</text>
+                    <text
+                        x="43"
+                        y="110"
+                        fill="white"
+                        fontSize="30"
+                    >
+                        {this.props.children}
+                    </text>
                 </g>
             </svg>
         );

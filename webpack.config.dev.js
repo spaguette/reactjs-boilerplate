@@ -1,8 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const globals = require('./buildGlobals');
-
-globals.getDefines();
 
 module.exports = {
     devServer: {
@@ -32,16 +29,9 @@ module.exports = {
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                include:  [path.join(__dirname, 'src')],
+                include: [path.join(__dirname, 'src')],
                 loader: 'babel-loader'
             },
-            /* CSS and SASS hot load */
-            // {
-            //     test: /\.(css|scss)$/,
-            //     loader: 'style-loader!css-loader?-minimize&camelCase&localIdentName=[name]__[local]___[hash:base64:5]&importLoaders=3!postcss-loader!sass-loader' +
-            //         '?includePaths[]=' + (path.resolve(__dirname, './node_modules')) +
-            //         '!' + globals.prepend + '?appendData=' + globals.sassGlobals
-            // },
             {
                 test:  /\.(css|scss)$/,
                 loaders: [
@@ -53,23 +43,13 @@ module.exports = {
                         loader: 'css-loader',
                         options: {
                             modules: true,
-                            minimize: process.env.NODE_ENV === 'production',
                             importLoaders: 2,
                             camelCase: true,
                             localIdentName: '[name]__[local]___[hash:base64:5]'
                         }
                     },
                     { loader: 'postcss-loader' },
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            includePaths: [
-                                path.resolve(__dirname, './node_modules'),
-                                globals.prepend
-                            ],
-                            appendData: globals.sassGlobals
-                        }
-                    }
+                    { loader: 'sass-loader' }
                 ]
             }
         ]
