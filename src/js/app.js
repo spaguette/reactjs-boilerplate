@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { lazy, Suspense, Component } from 'react';
 import axios from 'axios';
 import { hot } from 'react-hot-loader';
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
 
 import outsideClick from './utils/dropdownCheck';
-import LoginComponent from './components/LoginComponent/LoginComponent.jsx';
-import RegistrationComponent from './components/RegistrationComponent/RegistrationComponent.jsx';
+const LoginComponent = lazy(() => import('./components/LoginComponent/LoginComponent.jsx'));
+const RegistrationComponent = lazy(() => import('./components/RegistrationComponent/RegistrationComponent.jsx')) ;
 import MainComponent from './components/MainComponent/MainComponent.jsx';
 
 /**
@@ -16,38 +16,39 @@ import MainComponent from './components/MainComponent/MainComponent.jsx';
  */
 /** Check the user authorization
  * @function
+ * @async
  * @param {Object} nextState - RouterState - created by ReactRouter
  * @param {RedirectFunction} redirectTo
  * @param {Function} callback
  * @return {void}
  * */
-const requireAuth = (nextState, redirectTo, callback) => {
-    axios.get('/api/session')
-        .then(() => {
-            setTimeout(() => {
-                console.info('User authorized, page rendered');
-                callback();
-            }, 0);
-        })
-        .catch(response => {
-            if (response instanceof Error) {
-                // Something happened in setting up the request that triggered an Error
-                console.error('Error', response.message);
+async function requireAuth(nextState, redirectTo, callback) {
+    try {
+        await axios.get('/api/session');
+
+        setTimeout(() => {
+            console.info('User authorized, page rendered');
+            callback();
+        }, 0);
+    } catch(err) {
+        if (err instanceof Error) {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error', err.message);
+        } else {
+            // The request was made, but the server responded with a status code
+            // that falls out of the range of 2xx
+            if (err.status === 401) {
+                console.error('User not authorized, please login');
+            } else if (err.status >= 500 && err.status <= 599) {
+                console.error('Server Error!');
             } else {
-                // The request was made, but the server responded with a status code
-                // that falls out of the range of 2xx
-                if (response.status === 401) {
-                    console.error('User not authorized, please login');
-                } else if (response.status >= 500 && response.status <= 599) {
-                    console.error('Server Error!');
-                } else {
-                    console.error('Unhandled Error!');
-                }
-                redirectTo('/login');
-                callback();
+                console.error('Unhandled Error!');
             }
-        });
-};
+            redirectTo('/login');
+            callback();
+        }
+    }
+}
 
 const loggedIn = false;
 
@@ -64,23 +65,25 @@ class App extends Component {
     render() {
         return (
             <Router>
-                <MainComponent>
-                    <Route
-                        exact
-                        path="/"
-                        render={() => loggedIn ? <Redirect to="/login" /> : <Redirect to="/registration" />}
-                    />
-                    <Switch>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <MainComponent>
                         <Route
-                            path="/login"
-                            component={LoginComponent}
+                            exact
+                            path="/"
+                            render={() => loggedIn ? <Redirect to="/login" /> : <Redirect to="/registration" />}
                         />
-                        <Route
-                            path="/registration"
-                            component={RegistrationComponent}
-                        />
-                    </Switch>
-                </MainComponent>
+                        <Switch>
+                            <Route
+                                path="/login"
+                                component={LoginComponent}
+                            />
+                            <Route
+                                path="/registration"
+                                component={RegistrationComponent}
+                            />
+                        </Switch>
+                    </MainComponent>
+                </Suspense>
             </Router>
         );
     }
