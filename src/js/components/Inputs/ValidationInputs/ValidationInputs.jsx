@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { memo, PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import autobind from 'autobind-decorator';
@@ -82,7 +82,7 @@ class TextInput extends PureComponent {
     }
 }
 
-const PasswordInput = props => <TextInput {...props} type="password" />;
+const PasswordInput = memo(props => <TextInput {...props} type="password" />);
 
 PasswordInput.propTypes = TextInput.propTypes;
 PasswordInput.defaultProps = TextInput.defaultProps;

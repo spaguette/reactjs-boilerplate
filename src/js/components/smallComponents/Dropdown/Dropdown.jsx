@@ -1,4 +1,4 @@
-import React, { Component, forwardRef, createRef } from 'react';
+import React, { memo, Component, forwardRef, createRef } from 'react';
 import autobind from 'autobind-decorator';
 
 import styles from './Dropdown.scss';
@@ -64,14 +64,14 @@ const withOutsideClickHandler = WrappedComponent => {
     return WithOutsideClickHandler;
 };
 
-const DropdownRoot = ({ onClick }) => <div className={styles.caption} onClick={onClick}>Click me!</div>;
-const DropdownContent = () => <div className={styles.innerContent}>This is a test Dropdown component!</div>;
+const DropdownRoot = memo(({ onClick }) => <div className={styles.caption} onClick={onClick}>Click me!</div>);
+const DropdownContent = memo(() => <div className={styles.innerContent}>This is a test Dropdown component!</div>);
 
-const Dropdown = ({ forwardedRef, isOpened, toggleDropdown }) => (
+const Dropdown = memo(({ forwardedRef, isOpened, toggleDropdown }) => (
     <div className={styles.container} ref={forwardedRef}>
         <DropdownRoot onClick={toggleDropdown} />
         {isOpened && <DropdownContent />}
     </div>
-);
+));
 
 export default withOutsideClickHandler(Dropdown);
