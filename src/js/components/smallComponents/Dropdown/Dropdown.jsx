@@ -7,7 +7,6 @@ import outsideClick from '../../../utils/dropdownCheck';
 const withForwardedRef = WrappedComponent => forwardRef((props, ref) => (
     <WrappedComponent
         {...props}
-        ref={props.instanceRef}
         forwardedRef={ref}
     />
 ));
@@ -16,7 +15,6 @@ const withOutsideClickHandler = WrappedComponent => {
     const WithForwardedRef = withForwardedRef(WrappedComponent);
 
     class WithOutsideClickHandler extends Component {
-        instanceRef = createRef()
         dropDownContentRef = createRef()
 
         state = { isOpened: false }
@@ -39,12 +37,6 @@ const withOutsideClickHandler = WrappedComponent => {
         @autobind
         handleClickOutside() {
             this.toggleDropdown(null, false);
-
-            const instance = this.instanceRef.current;
-
-            if (instance && typeof instance.handleClickOutside === 'function') {
-                instance.handleClickOutside(event);
-            }
         }
 
         render() {
@@ -52,7 +44,6 @@ const withOutsideClickHandler = WrappedComponent => {
                 <WithForwardedRef
                     {...this.props}
                     ref={this.dropDownContentRef}
-                    instanceRef={this.instanceRef}
                     isOpened={this.state.isOpened}
                     onOutsideClick={this.handleClickOutside}
                     toggleDropdown={this.toggleDropdown}

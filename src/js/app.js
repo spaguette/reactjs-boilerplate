@@ -1,6 +1,6 @@
+import { hot } from 'react-hot-loader/root';
 import React, { lazy, Suspense, Component } from 'react';
 import axios from 'axios';
-import { hot } from 'react-hot-loader';
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
 
 import outsideClick from './utils/dropdownCheck';
@@ -52,7 +52,6 @@ async function requireAuth(nextState, redirectTo, callback) {
 
 const loggedIn = false;
 
-@hot(module)
 class App extends Component {
     componentDidMount() {
         outsideClick.initialize();
@@ -89,4 +88,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default hot(App);
