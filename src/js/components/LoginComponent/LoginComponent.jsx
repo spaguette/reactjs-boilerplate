@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import autobind from 'autobind-decorator';
 
 import * as styles from './LoginComponent.scss';
 import SessionActions from '../../reflux/actions/SessionActions';
@@ -10,30 +9,29 @@ class LoginComponent extends PureComponent {
         password: ''
     }
 
-    @autobind
-    handleUsernameChange(event) {
+    handleUsernameChange = (event) => {
         this.setState({ username: event.target.value });
     }
 
-    @autobind
-    handlePasswordChange(event) {
+
+    handlePasswordChange = (event) => {
         this.setState({ password: event.target.value });
     }
 
-    @autobind
-    handleLoginClick() {
+
+    handleLoginClick = () => {
         const { username, password } = this.state;
 
         SessionActions.logIn({ username, password }, this.props.history);
     }
 
-    @autobind
-    handleRegistrationClick() {
+
+    handleRegistrationClick = () => {
         this.props.history.push('/registration');
     }
 
-    @autobind
-    handleKeyDown(event) {
+
+    handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             this.handleLoginClick();
         }

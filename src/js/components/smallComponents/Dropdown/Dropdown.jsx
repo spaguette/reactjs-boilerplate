@@ -1,5 +1,4 @@
 import React, { memo, Component, forwardRef, createRef } from 'react';
-import autobind from 'autobind-decorator';
 
 import styles from './Dropdown.scss';
 import outsideClick from '../../../utils/dropdownCheck';
@@ -27,15 +26,13 @@ const withOutsideClickHandler = WrappedComponent => {
             }
         }
 
-        @autobind
-        toggleDropdown(event, newIsOpened = null) {
+        toggleDropdown = (event, newIsOpened = null) => {
             this.setState(prevState => ({
                 isOpened: newIsOpened === null ? !prevState.isOpened : newIsOpened
             }));
         }
 
-        @autobind
-        handleClickOutside() {
+        handleClickOutside = () => {
             this.toggleDropdown(null, false);
         }
 

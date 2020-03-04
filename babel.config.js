@@ -3,7 +3,6 @@ module.exports = {
         'react-hot-loader/babel',
 
         // Stage 2
-        ['@babel/plugin-proposal-decorators', { 'legacy': true }],
         '@babel/plugin-proposal-function-sent',
         '@babel/plugin-proposal-export-namespace-from',
         '@babel/plugin-proposal-numeric-separator',

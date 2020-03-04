@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import autobind from 'autobind-decorator';
 
 import * as styles from './RegistrationComponent.scss';
 import SessionActions from '../../reflux/actions/SessionActions';
@@ -24,8 +23,7 @@ class RegistrationComponent extends PureComponent {
         this[validityProperty] = isValid;
     }
 
-    @autobind
-    register() {
+    register = () => {
         const { username, password, licensePlate } = this.state;
 
         if (this.isLoginValid && this.isPasswordValid && this.isLicensePlateValid) {
@@ -35,13 +33,11 @@ class RegistrationComponent extends PureComponent {
         }
     }
 
-    @autobind
-    handleLoginClick() {
+    handleLoginClick = () => {
         this.props.history.push('/login');
     }
 
-    @autobind
-    handleKeyDown(event) {
+    handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             this.register();
         }

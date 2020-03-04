@@ -34,8 +34,7 @@ module.exports = {
                         options: {
                             modules: true,
                             importLoaders: 2,
-                            camelCase: true,
-                            localIdentName: '[name]__[local]___[hash:base64:5]'
+                            localsConvention: 'camelCase'
                         }
                     },
                     { loader: 'postcss-loader' },

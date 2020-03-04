@@ -40,15 +40,18 @@ module.exports = {
                 loaders: [
                     {
                         loader: 'style-loader',
-                        options: { singleton: true }
+                        options: { 
+                            injectType: 'singletonStyleTag'
+                        }
                     },
                     {
                         loader: 'css-loader',
                         options: {
-                            modules: true,
+                            modules: {
+                                localIdentName: '[path][name]__[local]'
+                            },
                             importLoaders: 2,
-                            camelCase: true,
-                            localIdentName: '[name]__[local]___[hash:base64:5]'
+                            localsConvention: 'camelCase',   
                         }
                     },
                     { loader: 'postcss-loader' },

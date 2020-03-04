@@ -1,7 +1,6 @@
 import React, { memo, PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import autobind from 'autobind-decorator';
 
 import * as styles from './ValidationInputs.scss';
 
@@ -38,17 +37,15 @@ class TextInput extends PureComponent {
         }
     }
 
-    validate(value) {
+    validate = (value) => {
         this.setState({ valid: typeof value === 'string' && value.trim() !== '' });
     }
 
-    @autobind
-    handleBlur(event) {
+    handleBlur = (event) => {
         this.validate(event.target.value);
     }
 
-    @autobind
-    handleChange(event) {
+    handleChange = (event) => {
         const { value } = event.target;
 
         this.props.onChange(value);
