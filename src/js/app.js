@@ -1,7 +1,7 @@
 import { hot } from 'react-hot-loader/root';
-import React, { lazy, Suspense, Component } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import axios from 'axios';
-import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 
 import outsideClick from './utils/dropdownCheck';
 const LoginComponent = lazy(() => import('./components/LoginComponent/LoginComponent.jsx'));
@@ -52,40 +52,38 @@ async function requireAuth(nextState, redirectTo, callback) {
 
 const loggedIn = false;
 
-class App extends Component {
-    componentDidMount() {
+const App = () => {
+    useEffect(() => {
         outsideClick.initialize();
-    }
 
-    componentWillUnmount() {
-        outsideClick.destroy();
-    }
+        return () => {
+            outsideClick.destroy();
+        }
+    })
 
-    render() {
-        return (
-            <Router>
-                <Suspense fallback={<div>Loading...</div>}>
-                    <MainComponent>
+    return (
+        <Router>
+            <Suspense fallback={<div>Loading...</div>}>
+                <MainComponent>
+                    <Route
+                        exact
+                        path="/"
+                        render={() => loggedIn ? <Redirect to="/login" /> : <Redirect to="/registration" />}
+                    />
+                    <Switch>
                         <Route
-                            exact
-                            path="/"
-                            render={() => loggedIn ? <Redirect to="/login" /> : <Redirect to="/registration" />}
+                            path="/login"
+                            component={LoginComponent}
                         />
-                        <Switch>
-                            <Route
-                                path="/login"
-                                component={LoginComponent}
-                            />
-                            <Route
-                                path="/registration"
-                                component={RegistrationComponent}
-                            />
-                        </Switch>
-                    </MainComponent>
-                </Suspense>
-            </Router>
-        );
-    }
+                        <Route
+                            path="/registration"
+                            component={RegistrationComponent}
+                        />
+                    </Switch>
+                </MainComponent>
+            </Suspense>
+        </Router>
+    );
 }
 
 export default hot(App);
