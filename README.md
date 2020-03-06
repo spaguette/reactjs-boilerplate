@@ -2,9 +2,9 @@
 Usages and compilation of ReactJS
 
 ## What is needed to be installed?
-By default, the needed version of Node.js is 8.11.1
-([https://nodejs.org/download/release/v8.11.1/](https://nodejs.org/download/release/v8.11.1/))
-Yarn package manager (version 1.2.1) will be installed once you run any script from the
+By default, the needed version of Node.js is 12.16.1
+([https://nodejs.org/download/release/v12.16.1/](https://nodejs.org/download/release/v12.16.1/))
+Yarn package manager (version 1.12.3) will be installed once you run any script from the
 `script` folder.
 
 ## Development

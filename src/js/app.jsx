@@ -4,9 +4,9 @@ import axios from 'axios';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 
 import outsideClick from './utils/dropdownCheck';
-const LoginComponent = lazy(() => import('./components/LoginComponent/LoginComponent.jsx'));
-const RegistrationComponent = lazy(() => import('./components/RegistrationComponent/RegistrationComponent.jsx')) ;
-import MainComponent from './components/MainComponent/MainComponent.jsx';
+const LoginComponent = lazy(() => import('./components/LoginComponent/LoginComponent'));
+const RegistrationComponent = lazy(() => import('./components/RegistrationComponent/RegistrationComponent')) ;
+import MainComponent from './components/MainComponent/MainComponent';
 
 /**
  * RedirectFunction (ReactRouter v1.0)

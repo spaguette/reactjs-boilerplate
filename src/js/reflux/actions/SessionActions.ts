@@ -1,40 +1,34 @@
 import axios from 'axios';
+import { History } from 'history';
+
+interface IAuthInfo {
+    username: string
+    password: string
+}
+
+interface IRegistrationInfo extends IAuthInfo {
+    licensePlate: string
+}
 
 const SessionActions = {
-    /**
-     * @function logIn
-     * @param {Object} authInfo
-     * @return {void}
-     * */
-    logIn: (authInfo, history) => {
-        axios.post('/api/session', {username: authInfo.username, password: authInfo.password})
+    logIn: ({ username, password }: IAuthInfo, history: History) => 
+        axios.post('/api/session', { username, password })
              .then(() => {
                  history.push('/reservation');
              })
              .catch((response) => {
                  //notify user about an error
                  console.error('Error while receiving response = ', response.data);
-             });
-    },
-    /**
-     * @function register
-     * @param {Object} regInfo
-     * @return {void}
-     * */
-    register: (regInfo, history) => {
-        axios.post('/api/registration', {
-            username: regInfo.username,
-            password: regInfo.password,
-            licensePlate: regInfo.licensePlate
-        })
+             }),
+    register: ({ username, password, licensePlate }: IRegistrationInfo, history: History) =>
+        axios.post('/api/registration', { username, password, licensePlate })
              .then(() => {
                  history.push('/reservation');
              })
              .catch((response) => {
                  //notify user about an error
                  console.error('Error while receiving response = ', response.data);
-             });
-    }
+             })
 };
 
 export default SessionActions;

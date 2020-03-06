@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
+import { History } from 'history';
 
 import * as styles from './LoginComponent.scss';
 import SessionActions from '../../reflux/actions/SessionActions';
 
-const LoginComponent = ({ history }) => {
+const LoginComponent: React.FC<{ history: History }> = ({ history }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
-    const handleUsernameChange = (event) => {
+    const handleUsernameChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         setUsername(event.target.value);
     }
 
-    const handlePasswordChange = (event) => {
+    const handlePasswordChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         setPassword(event.target.value);
     }
 
@@ -19,13 +20,13 @@ const LoginComponent = ({ history }) => {
         SessionActions.logIn({ username, password }, history);
     }
 
-    const handleRegistrationClick = () => {
+    const handleRegistrationClick: React.MouseEventHandler<HTMLDivElement> = () => {
         history.push('/registration');
     }
 
-    const handleKeyDown = (event) => {
+    const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) => {
         if (event.key === 'Enter') {
-            this.handleLoginClick();
+            handleLoginClick();
         }
     }
 

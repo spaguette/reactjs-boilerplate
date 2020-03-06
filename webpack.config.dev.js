@@ -19,7 +19,7 @@ module.exports = {
     },
 
     resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
         modules: ['node_modules'],
         alias: {
             'react-dom': '@hot-loader/react-dom'
@@ -30,7 +30,7 @@ module.exports = {
         rules: [
             /* React Loader with Babel and hot load */
             {
-                test: /\.(js|jsx)$/,
+                test:  /\.(j|t)s(x)?$/,
                 exclude: /node_modules/,
                 include: [path.join(__dirname, 'src')],
                 loader: 'babel-loader'

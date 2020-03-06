@@ -1,11 +1,11 @@
-const compose = (...fns) => fns.reduceRight((prevFn, nextFn) => (...args) => nextFn(prevFn(...args)), value => value);
+const compose = (...fns: Function[]) => fns.reduceRight((prevFn, nextFn) => (...args: any[]) => nextFn(prevFn(...args)), (value: any) => value);
 
 class OutsideClickHandler {
     _handlersMap = new Map()
 
-    _makeChainable = fn => (...args) => compose(() => this, fn.bind(this._handlersMap)(...args))
+    _makeChainable = (fn: Function) => (...args: any[]) => compose(() => this, fn.bind(this._handlersMap)(...args))
 
-    _handleOutsideClick = evt => {
+    _handleOutsideClick = (evt: Event) => {
         this._handlersMap.forEach((handler, el) => !el.contains(evt.target) && handler(evt))
     }
 

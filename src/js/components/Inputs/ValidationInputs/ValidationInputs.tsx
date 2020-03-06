@@ -1,10 +1,22 @@
-import React, { memo, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
+import PropTypes, { InferProps } from 'prop-types';
 import classNames from 'classnames';
 
 import * as styles from './ValidationInputs.scss';
 
-const TextInput = ({ 
+const textInputPropTypes = {
+    value: PropTypes.string,
+    isValidInitially: PropTypes.bool,
+    type: PropTypes.string,
+    label: PropTypes.string,
+    labelClassName: PropTypes.string,
+    inputClassName: PropTypes.string,
+
+    onChange: PropTypes.func.isRequired,
+    onValidityChange: PropTypes.func.isRequired
+}
+
+const TextInput: React.FC<InferProps<typeof textInputPropTypes>> = ({ 
     value, 
     label,
     isValidInitially, 
@@ -16,7 +28,7 @@ const TextInput = ({
 }) => {
     const [valid, setValid] = useState(isValidInitially);
 
-    const validate = (value) => {
+    const validate = (value?: string) => {
         setValid(typeof value === 'string' && value.trim() !== '');
     }
 
@@ -28,15 +40,15 @@ const TextInput = ({
         onValidityChange(valid);
     }, [valid])
 
-    const handleBlur = (event) => {
+    const handleBlur: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         validate(event.target.value);
     }
 
-    const handleChange = (event) => {
-        const { value } = event.target;
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+        const { value: eventValue } = event.target;
 
-        onChange(value);
-        validate(value);
+        onChange(eventValue);
+        validate(eventValue);
     }
 
     const inputClasses = classNames(inputClassName, {
@@ -62,17 +74,7 @@ const TextInput = ({
     ); 
 }
 
-TextInput.propTypes = {
-    value: PropTypes.string,
-    isValidInitially: PropTypes.bool,
-    type: PropTypes.string,
-    label: PropTypes.string,
-    labelClassName: PropTypes.string,
-    inputClassName: PropTypes.string,
-
-    onChange: PropTypes.func.isRequired,
-    onValidityChange: PropTypes.func.isRequired
-}
+TextInput.propTypes = textInputPropTypes
 
 TextInput.defaultProps = {
     type: 'text',
@@ -81,9 +83,12 @@ TextInput.defaultProps = {
     onValidityChange: () => {}
 }
 
-const PasswordInput = memo(props => <TextInput {...props} type="password" />);
+const passwordInputPropTypes = TextInput.propTypes;
 
-PasswordInput.propTypes = TextInput.propTypes;
+const PasswordInput: React.FC<InferProps<typeof passwordInputPropTypes>> = (props) => 
+    <TextInput {...props} type="password" />;
+
+PasswordInput.propTypes = passwordInputPropTypes;
 PasswordInput.defaultProps = TextInput.defaultProps;
 
 export default TextInput;

@@ -14,5 +14,5 @@ module.exports = {
         ['@babel/plugin-proposal-class-properties', { 'loose': false }],
         '@babel/plugin-proposal-json-strings'
     ],
-    presets: ['@babel/react', '@babel/env']
+    presets: ['@babel/react', '@babel/env', '@babel/typescript']
 };

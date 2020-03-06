@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { InferProps } from 'prop-types';
 
 import * as styles from './HighlightCircle.scss';
 
-const HighlightCircle = ({ onClick, children }) => {
+const highlightCircleProps =  {
+    onClick: PropTypes.func.isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ]).isRequired
+}
+
+const HighlightCircle: React.FC<InferProps<typeof highlightCircleProps>> = ({ onClick, children }) => {
     const [color, setColor] = useState('red')
 
-    const handleMouseOver = () => {
+    const handleMouseOver: React.MouseEventHandler<SVGElement> = () => {
         setColor('green')
     }
 
-    const handleMouseOut = () => {
+    const handleMouseOut: React.MouseEventHandler<SVGElement> = () => {
         setColor('red')
     }
 
@@ -91,8 +99,6 @@ const HighlightCircle = ({ onClick, children }) => {
     );
 }
 
-HighlightCircle.propTypes = {
-    onClick: PropTypes.func.isRequired
-}
+HighlightCircle.propTypes = highlightCircleProps
 
 export default HighlightCircle;
