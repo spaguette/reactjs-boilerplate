@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { RouteComponentProps } from 'react-router'
 
 import * as styles from './RegistrationComponent.scss';
 import SessionActions from '../../reflux/actions/SessionActions';
 import {TextInput, PasswordInput} from '../Inputs/ValidationInputs/ValidationInputs';
 
-const RegistrationComponent = ({ history }) => {
+interface RegistrationComponentProps extends RouteComponentProps {}
+
+const RegistrationComponent: React.FC<RegistrationComponentProps> = ({ history }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [licensePlate, setLicensePlate] = useState('')
@@ -21,11 +24,11 @@ const RegistrationComponent = ({ history }) => {
         }
     }
 
-    const handleLoginClick = () => {
+    const handleLoginClick: React.MouseEventHandler = () => {
         history.push('/login');
     }
 
-    const handleKeyDown = (event) => {
+    const handleKeyDown: React.KeyboardEventHandler = (event) => {
         if (event.key === 'Enter') {
             register();
         }

@@ -48,10 +48,10 @@ module.exports = {
                         loader: 'css-loader',
                         options: {
                             modules: {
-                                localIdentName: '[path][name]__[local]'
+                                localIdentName: '[path][name]__[local]',
+                                exportLocalsConvention: 'camelCase'
                             },
-                            importLoaders: 2,
-                            localsConvention: 'camelCase',   
+                            importLoaders: 2
                         }
                     },
                     { loader: 'postcss-loader' },

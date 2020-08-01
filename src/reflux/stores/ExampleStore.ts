@@ -1,11 +1,10 @@
-import EventEmitter from 'events';
+import * as EventEmitter from 'events';
 
 const CONTENT_CHANGE = 'CONTENT_CHANGE';
 
 type EventCallback = (...args: any[]) => void
 
-//@ts-ignore This is a bug caused by NodeJS typings
-class ExampleStore extends EventEmitter {
+class ExampleStore extends EventEmitter.EventEmitter {
     public content: any | null
 
     constructor() {

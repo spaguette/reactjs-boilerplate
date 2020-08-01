@@ -8,7 +8,7 @@ import "regenerator-runtime/runtime";
 import 'normalize.css';
 import './styles/index.scss';
 
-import App from './js/app';
+import App from './app';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

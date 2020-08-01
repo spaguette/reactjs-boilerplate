@@ -32,9 +32,10 @@ module.exports = {
                     {
                         loader: 'css-loader',
                         options: {
-                            modules: true,
-                            importLoaders: 2,
-                            localsConvention: 'camelCase'
+                            modules: {
+                                exportLocalsConvention: 'camelCase'
+                            },
+                            importLoaders: 2
                         }
                     },
                     { loader: 'postcss-loader' },

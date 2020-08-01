@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes, { InferProps } from 'prop-types';
 import classNames from 'classnames';
 
 import * as styles from './ValidationInputs.scss';
 
-const textInputPropTypes = {
-    value: PropTypes.string,
-    isValidInitially: PropTypes.bool,
-    type: PropTypes.string,
-    label: PropTypes.string,
-    labelClassName: PropTypes.string,
-    inputClassName: PropTypes.string,
+interface TextInputProps {
+    value?: string,
+    isValidInitially?: boolean,
+    type?: string,
+    label?: string,
+    labelClassName?: string,
+    inputClassName?: string,
 
-    onChange: PropTypes.func.isRequired,
-    onValidityChange: PropTypes.func.isRequired
+    onChange?: (eventValue: string) => void,
+    onValidityChange?: (isValid: boolean) => void
 }
 
-const TextInput: React.FC<InferProps<typeof textInputPropTypes>> = ({ 
+const TextInput: React.FC<TextInputProps> = ({ 
     value, 
     label,
     isValidInitially, 
@@ -34,11 +33,11 @@ const TextInput: React.FC<InferProps<typeof textInputPropTypes>> = ({
 
     useEffect(() => {
         (!isValidInitially || value) && validate(value);
-    }, [isValidInitially, value])
+    }, [validate, isValidInitially, value])
 
     useEffect(() => {
         onValidityChange(valid);
-    }, [valid])
+    }, [onValidityChange, valid])
 
     const handleBlur: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         validate(event.target.value);
@@ -74,8 +73,6 @@ const TextInput: React.FC<InferProps<typeof textInputPropTypes>> = ({
     ); 
 }
 
-TextInput.propTypes = textInputPropTypes
-
 TextInput.defaultProps = {
     type: 'text',
 
@@ -83,12 +80,9 @@ TextInput.defaultProps = {
     onValidityChange: () => {}
 }
 
-const passwordInputPropTypes = TextInput.propTypes;
-
-const PasswordInput: React.FC<InferProps<typeof passwordInputPropTypes>> = (props) => 
+const PasswordInput: React.FC<TextInputProps> = (props) => 
     <TextInput {...props} type="password" />;
 
-PasswordInput.propTypes = passwordInputPropTypes;
 PasswordInput.defaultProps = TextInput.defaultProps;
 
 export default TextInput;
