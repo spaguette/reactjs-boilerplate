@@ -2,7 +2,7 @@
   // http://eslint.org/docs/rules/
   // https://github.com/yannickcr/eslint-plugin-react
 
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "env": {
     "browser": true,
     "node": true,
@@ -15,8 +15,13 @@
     "ENV_DEBUG": false //disallow ENV_DEBUG rewrite
   },
   "plugins": [
+    "@typescript-eslint",
     "react",
     "jsx-a11y"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   "ecmaFeatures": {
     "classes": true,

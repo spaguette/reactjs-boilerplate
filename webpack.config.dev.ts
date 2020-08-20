@@ -1,10 +1,10 @@
-const webpack = require('webpack');
-const path = require('path');
+import webpack from 'webpack';
+import path from 'path';
 
-module.exports = {
+const config: webpack.Configuration = {
     devServer: {
         host: '0.0.0.0',
-        port: '8081',
+        port: 8081,
         historyApiFallback: true
     },
 
@@ -30,17 +30,17 @@ module.exports = {
         rules: [
             /* React Loader with Babel and hot load */
             {
-                test:  /\.(j|t)s(x)?$/,
+                test: /\.(j|t)s(x)?$/,
                 exclude: /node_modules/,
                 include: [path.join(__dirname, 'src')],
                 loader: 'babel-loader'
             },
             {
-                test:  /\.(css|scss)$/,
+                test: /\.(css|scss)$/,
                 loaders: [
                     {
                         loader: 'style-loader',
-                        options: { 
+                        options: {
                             injectType: 'singletonStyleTag'
                         }
                     },
@@ -65,3 +65,5 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin()
     ]
 };
+
+export default config;

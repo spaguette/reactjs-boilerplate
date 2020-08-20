@@ -1,7 +1,8 @@
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+import path from 'path';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import { Configuration } from 'webpack'
 
-module.exports = {
+const config: Configuration = {
     entry: './src/index.js',
 
     output: {
@@ -18,13 +19,13 @@ module.exports = {
         rules: [
             /* React Loader with Babel and hot load */
             {
-                test:  /\.(j|t)s(x)?$/,
+                test: /\.(j|t)s(x)?$/,
                 exclude: /node_modules/,
                 include: [path.join(__dirname, 'src')],
                 loader: 'babel-loader'
             },
             {
-                test:  /\.(css|scss)$/,
+                test: /\.(css|scss)$/,
                 loaders: [
                     {
                         loader: MiniCssExtractPlugin.loader
@@ -49,3 +50,5 @@ module.exports = {
         new MiniCssExtractPlugin({ filename: 'styles.css' })
     ]
 };
+
+export default config;
