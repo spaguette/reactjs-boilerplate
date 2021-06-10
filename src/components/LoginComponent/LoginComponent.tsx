@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { History } from 'history';
 
 import * as styles from './LoginComponent.scss';
@@ -8,27 +8,27 @@ const LoginComponent: React.FC<{ history: History }> = ({ history }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
-    const handleUsernameChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-        setUsername(event.target.value);
-    }
+    const handleUsernameChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event) => {
+        setUsername(event.target.value)
+    }, [])
 
-    const handlePasswordChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-        setPassword(event.target.value);
-    }
+    const handlePasswordChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event) => {
+        setPassword(event.target.value)
+    }, [])
 
-    const handleLoginClick = () => {
-        SessionActions.logIn({ username, password }, history);
-    }
+    const handleLoginClick = useCallback(() => {
+        SessionActions.logIn({ username, password }, history)
+    }, [username, password, history])
 
-    const handleRegistrationClick: React.MouseEventHandler<HTMLDivElement> = () => {
-        history.push('/registration');
-    }
+    const handleRegistrationClick: React.MouseEventHandler<HTMLDivElement> = useCallback(() => {
+        history.push('/registration')
+    }, [history])
 
-    const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) => {
+    const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = useCallback((event) => {
         if (event.key === 'Enter') {
-            handleLoginClick();
+            handleLoginClick()
         }
-    }
+    }, [handleLoginClick])
 
     return (
         <div

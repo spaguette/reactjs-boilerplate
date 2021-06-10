@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import * as styles from './HighlightCircle.scss';
 
@@ -10,13 +10,13 @@ interface HighlightCircleProps {
 const HighlightCircle: React.FC<HighlightCircleProps> = ({ onClick, children }) => {
     const [color, setColor] = useState('red')
 
-    const handleMouseOver: React.MouseEventHandler<SVGElement> = () => {
+    const handleMouseOver: React.MouseEventHandler<SVGElement> = useCallback(() => {
         setColor('green')
-    }
+    }, [])
 
-    const handleMouseOut: React.MouseEventHandler<SVGElement> = () => {
+    const handleMouseOut: React.MouseEventHandler<SVGElement> = useCallback(() => {
         setColor('red')
-    }
+    }, [])
 
     return (
         <svg

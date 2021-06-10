@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import classNames from 'classnames';
 
 import * as styles from './ValidationInputs.scss';
@@ -15,21 +15,21 @@ interface TextInputProps {
     onValidityChange?: (isValid: boolean) => void
 }
 
-const TextInput: React.FC<TextInputProps> = ({ 
-    value, 
+export const TextInput: React.FC<TextInputProps> = ({
+    value,
     label,
-    isValidInitially, 
-    type, 
-    labelClassName, 
-    inputClassName, 
-    onChange, 
-    onValidityChange 
+    isValidInitially = false,
+    type = 'text',
+    labelClassName,
+    inputClassName,
+    onChange = () => { },
+    onValidityChange = () => { }
 }) => {
     const [valid, setValid] = useState(isValidInitially);
 
-    const validate = (value?: string) => {
+    const validate = useCallback((value?: string) => {
         setValid(typeof value === 'string' && value.trim() !== '');
-    }
+    }, [])
 
     useEffect(() => {
         (!isValidInitially || value) && validate(value);
@@ -39,16 +39,16 @@ const TextInput: React.FC<TextInputProps> = ({
         onValidityChange(valid);
     }, [onValidityChange, valid])
 
-    const handleBlur: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const handleBlur: React.ChangeEventHandler<HTMLInputElement> = useCallback((event) => {
         validate(event.target.value);
-    }
+    }, [validate])
 
-    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event) => {
         const { value: eventValue } = event.target;
 
         onChange(eventValue);
         validate(eventValue);
-    }
+    }, [onChange, validate])
 
     const inputClasses = classNames(inputClassName, {
         [styles.inputContainer]: !inputClassName && valid,
@@ -70,24 +70,8 @@ const TextInput: React.FC<TextInputProps> = ({
                 onBlur={handleBlur}
             />
         </div>
-    ); 
+    )
 }
 
-TextInput.defaultProps = {
-    type: 'text',
-
-    onChange: () => {},
-    onValidityChange: () => {}
-}
-
-const PasswordInput: React.FC<TextInputProps> = (props) => 
-    <TextInput {...props} type="password" />;
-
-PasswordInput.defaultProps = TextInput.defaultProps;
-
-export default TextInput;
-
-export {
-    TextInput,
-    PasswordInput
-};
+export const PasswordInput: React.FC<TextInputProps> = (props) =>
+    <TextInput {...props} type="password" />
